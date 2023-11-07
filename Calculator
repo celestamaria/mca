@@ -69,117 +69,70 @@
 
 
 ------------------------------------------------MAINACTIVITY-------------------------------------------------------
-
-
-
-
-package com.example.calculator;
+package com.example.a8_calculator;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
-    private EditText editTextNumber1;
-    private EditText editTextNumber2;
-    private Button buttonAdd;
-    private Button buttonSubtract;
-    private Button buttonMultiply;
-    private Button buttonDivide;
-    private Button buttonClear;
-    private TextView textViewResult;
+public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        editTextNumber1 = findViewById(R.id.editTextNumber1);
-        editTextNumber2 = findViewById(R.id.editTextNumber2);
-        buttonAdd = findViewById(R.id.buttonAdd);
-        buttonSubtract = findViewById(R.id.buttonSubtract);
-        buttonMultiply = findViewById(R.id.buttonMultiply);
-        buttonDivide = findViewById(R.id.buttonDivide);
-        buttonClear = findViewById(R.id.buttonClear);
-        textViewResult = findViewById(R.id.textViewResult);
+        Button addBtn = findViewById(R.id.add_btn);
+        Button subBtn = findViewById(R.id.sub_btn);
+        Button mulBtn = findViewById(R.id.mul_btn);
+        Button divBtn = findViewById(R.id.div_btn);
 
-        buttonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calculate("+");
-            }
-        });
-
-        buttonSubtract.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calculate("-");
-            }
-        });
-
-        buttonMultiply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calculate("*");
-            }
-        });
-
-        buttonDivide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calculate("/");
-            }
-        });
-
-        buttonClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearInputFields();
-            }
-        });
+        addBtn.setOnClickListener(this);
+        subBtn.setOnClickListener(this);
+        mulBtn.setOnClickListener(this);
+        divBtn.setOnClickListener(this);
     }
 
-    private void calculate(String operation) {
-        String num1 = editTextNumber1.getText().toString();
-        String num2 = editTextNumber2.getText().toString();
+    @Override
+    public void onClick(View v){
+        EditText numOne = findViewById(R.id.number1_input);
+        EditText numTwo = findViewById(R.id.number2_input);
+        TextView resultView = findViewById(R.id.result);
+        float num1;
+        float num2;
+        float result = 0;
+        String operator = "";
 
-        if (!num1.isEmpty() && !num2.isEmpty()) {
-            double result = 0;
-            double number1 = Double.parseDouble(num1);
-            double number2 = Double.parseDouble(num2);
+        if(TextUtils.isEmpty(numOne.getText().toString()) || TextUtils.isEmpty(numTwo.getText().toString()))
+            return;
+        else {
 
-            switch (operation) {
-                case "+":
-                    result = number1 + number2;
-                    break;
-                case "-":
-                    result = number1 - number2;
-                    break;
-                case "*":
-                    result = number1 * number2;
-                    break;
-                case "/":
-                    if (number2 != 0) {
-                        result = number1 / number2;
-                    } else {
-                        textViewResult.setText("Division by zero is not allowed");
-                        return;
-                    }
-                    break;
+            num1 = Float.parseFloat(numOne.getText().toString());
+
+            num2 = Float.parseFloat(numTwo.getText().toString());
+
+            int id = v.getId();
+
+            if(id==R.id.add_btn) {
+                operator = "+";
+                result = num1 + num2;
+            } else if(id==R.id.sub_btn) {
+                operator = "-";
+                result = num1 - num2;
+            } else if(id==R.id.mul_btn) {
+                operator = "*";
+                result = num1 * num2;
+            } else if(id==R.id.div_btn) {
+                operator = "/";
+                result = num1 / num2;
             }
-
-            textViewResult.setText("Result: " + result);
-        } else {
-            textViewResult.setText("Please enter two numbers");
         }
-    }
-
-    private void clearInputFields() {
-        editTextNumber1.getText().clear();
-        editTextNumber2.getText().clear();
-        textViewResult.setText("Result: ");
+        String resultStr = num1 + " " + operator + " " + num2 + " = " + result;
+        resultView.setText(resultStr);
     }
 }
